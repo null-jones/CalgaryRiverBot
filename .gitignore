@@ -1,0 +1,6 @@
+keys.py
+.vscode/*
+__pycache__/*
+env/*
+kali_env/*
+*.zip

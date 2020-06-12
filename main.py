@@ -14,12 +14,14 @@ RIVER_DATA_API_URL = "https://data.calgary.ca/resource/5fdg-ifgr.json"
 
 MARKERS = {"Safe": "🟢", "Warn": "🟡", "Danger": "🔴"}
 
+#Dictionary - Key corresponds to Station code.
 MARKER_LEVELS = {
     "05BJ001": {
         "flow": {20: MARKERS["Safe"], 35: MARKERS["Warn"], 50: MARKERS["Danger"],},
     },
 }
 
+#Stations we'll use (There's more than this), Key is station code, Val is verbose name
 STATIONS = {
     "05BH004": "Bow River at Calgary",
     "05BJ001": "Elbow River below Glenmore Dam",
@@ -36,6 +38,7 @@ STATION_NAME_MAP = {
     "Elbow River at Bragg Creek": "Elbow - Bragg Creek",
 }
 
+#Used for aggregating the data (if you need to!)
 AGGREGATE_COLUMNS = {
     "level": np.mean,
     "level_min": np.min,
@@ -102,6 +105,7 @@ def pull_station(station_number, aggregate=False, limit=5000, pull_from_df=False
 
 
 def pull_all_recent_stations(aggregate=False, limit=20000):
+    #Returns a dataframe w/ recent data
     return pd.read_json(f"{RIVER_DATA_API_URL}?$limit={round(limit, 0)}").set_index(
         "timestamp"
     )
@@ -125,15 +129,6 @@ def status_symbol(station_number, flow):
         return MARKERS["Danger"]
     else:
         return ""
-
-
-def gen_individual_str(name, flow="", level=""):
-    if flow:
-        flow = f"{flow} m3/min"
-    if level:
-        level = f"{level} m"
-
-    return f"{name}: {flow}, {level}"
 
 
 def gen_charts(df_flow_list, df_level_list):

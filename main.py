@@ -83,10 +83,12 @@ def pull_station(station_number, aggregate=False, limit=5000, pull_from_df=False
 
     # Pull River data
     if pull_from_df is False:
+        #If dataframe is not provided, pull from url.
         df = pd.read_json(
             f"{RIVER_DATA_API_URL}?station_number={station_number}&$order=timestamp%20DESC&$limit={round(limit, 0)}"
         ).set_index("timestamp")
     else:
+        #If dataframe is provided, pull station from provided dataframe (Saves requests)
         df = pull_from_df[pull_from_df["station_number"] == station_number]
 
     # Convert level and flow columns to numeric, and coerce errors to NaN instead of "NA" string
